@@ -8,8 +8,8 @@ O nosso sistema de sprint foi criado com o objetivo principal de facilitar a inc
 _(nas próximas atualizações serão adicionadas opções de aceleração, para suavizar ainda mais a transição entre caminhada e corrida do personagem)_
 
 ## Instalação
-1. Para baixar a última versão do Sprint, [clique aqui](https://github.com/GGrenouer/Sprint-2.0/releases) ou vá para:
-https://github.com/GGrenouer/Sprint-2.0/releases.
+1. Para baixar a última versão do Sprint, [clique aqui](https://github.com/GGrenouer/SprintEase/releases) ou vá para:
+https://github.com/GGrenouer/SprintEase/releases.
 
 2. Ao baixar o arquivo **".rbxm"**, abra o seu projeto no **Roblox Studio**, abra o **Explorer**, e vá para: **"StarterPlayer > StarterPlayerScripts"**. Pressione o botão direito sobre o **"StarterPlayerScripts"** e selecione a opção **Inserir do arquivo...** (caso teu roblox esteja em inglês, a opção será: **Insert from File..**)
 
