@@ -39,7 +39,16 @@ function SprintSys:Correr()
 	
 	local Animator = Humanoid:FindFirstChildWhichIsA("Animator") or Humanoid
 	
-	if (Humanoid.MoveDirection.Magnitude > 0) and (Humanoid.FloorMaterial ~= Enum.Material.Air) then
+	--> se tudo for verdadeiro, o jogador vai poder correr
+	local checagens = {
+		(Humanoid.WalkSpeed > self.CONFIG.Propriedades.Velocidade.Caminhar/2), -- checa se tá stunado
+		(not Humanoid.Sit), -- checa se tá sentado
+		(Humanoid.MoveDirection.Magnitude > 0), -- checa se tá parado
+		(Humanoid.FloorMaterial ~= Enum.Material.Air) -- checa se tá no ar
+	}
+	--<
+	
+	if (not table.find(checagens, false)) then
 		Humanoid.WalkSpeed = self.CONFIG.Propriedades.Velocidade.Correr
 		
 		local Animation = self.CONFIG.Propriedades["Animação Personalizada"]
@@ -53,7 +62,7 @@ function SprintSys:Correr()
 		end
 	end
 	
-	--> Checagens
+	--> Checagens enquanto corre
 	-- tira o efeito de correr caso esteja parado
 	local ultimo_MoveDirection = math.round(Humanoid.MoveDirection.Magnitude)
 	self.Connections.MoveDirection = Humanoid:GetPropertyChangedSignal("MoveDirection"):Connect(function()	
@@ -84,6 +93,24 @@ function SprintSys:Correr()
 			end
 		end
 	end)
+	
+	-- para de correr caso a pessoa seja stunada
+	local stunado = (Humanoid.WalkSpeed <= 0)
+	self.Connections.WalkSpeed = Humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+		if (stunado == (Humanoid.WalkSpeed <= 0)) then return end
+		stunado = (Humanoid.WalkSpeed <= 0)
+		
+		if stunado then
+			self:Caminhar()
+		end
+	end)
+	
+	-- para de correr se estiver sentado
+	self.Connections.Seated = Humanoid.Seated:Connect(function(sentado)
+		if sentado then
+			self:Caminhar()
+		end
+	end)
 	--<
 	
 	self.Estado = "Correndo"
@@ -94,7 +121,7 @@ function SprintSys:Caminhar(temp)
 	if (not Character) or (not Character.Parent) then return end
 
 	local Humanoid = Character:FindFirstChildWhichIsA("Humanoid")
-	if (Humanoid) then
+	if (Humanoid) and (Humanoid.WalkSpeed > self.CONFIG.Propriedades.Velocidade.Caminhar) then
 		Humanoid.WalkSpeed = self.CONFIG.Propriedades.Velocidade.Caminhar
 	end
 	
@@ -144,5 +171,5 @@ return function(CONFIG)
 		end
 		
 		return Enum.ContextActionResult.Pass
-	end, (Sprint.CONFIG.Controles.Celular and Sprint.CONFIG.Controles.Celular.Habilitar), table.unpack(Sprint.CONFIG.Controles.Teclas))
+	end, (Sprint.CONFIG.Controles.Mobile and Sprint.CONFIG.Controles.Mobile.Habilitar or false), table.unpack(Sprint.CONFIG.Controles.Teclas))
 end
